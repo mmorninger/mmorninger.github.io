@@ -1,205 +1,385 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morninger Universe | Interactive</title>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* --- DAWN BACKGROUND --- */
-        .dawn-portal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
-            background-size: cover;
-            z-index: 1; cursor: pointer;
-            filter: brightness(0.4); transition: filter 1s;
-        }
+<title>Bound Artifact</title>
 
-        /* --- WORLD ZOE SYSTEM --- */
-        .zoe-system {
-            position: relative; z-index: 3; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 1200px;
-        }
+<style>
 
-        #dust-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
+html,body{
+margin:0;
+height:100%;
+background:#000;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+perspective:3000px;
+font-family:Helvetica;
+}
 
-        .zoetrope-wrapper { width: 200px; height: 280px; transform-style: preserve-3d; cursor: grab; z-index: 4; }
-        .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; }
 
-        .face {
-            position: absolute; width: 200px; height: 280px;
-            background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: #fff; border-radius: 15px;
-            clip-path: ellipse(95% 100% at 50% 50%); backface-visibility: visible;
-        }
-        .face span { font-size: 10px; letter-spacing: 2px; margin-top: 15px; }
+/* SCENE */
 
-        /* --- BURROWEL DYNAMIC SYSTEM --- */
-        .burrowel-anchor {
-            position: relative; z-index: 5; margin-top: 60px;
-            display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; cursor: pointer;
-        }
+.scene{
+position:relative;
+width:600px;
+height:600px;
+display:flex;
+justify-content:center;
+align-items:center;
+transform-style:preserve-3d;
+}
 
-        /* Hình ảnh đại diện hiện lên khi active */
-        .burrowel-preview {
-            position: absolute; bottom: 60px; width: 100px; height: 140px;
-            background: url('https://googleusercontent.com/image_generation_content/3') center/cover;
-            border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);
-            opacity: 0; transform: translateY(20px); transition: 0.5s; pointer-events: none;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
 
-        .burrowel-anchor.active .burrowel-preview { opacity: 1; transform: translateY(0); }
+/* CORE */
 
-        .burrowel-base {
-            width: 200px; height: 35px;
-            background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%);
-            transform: rotateX(75deg); border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.5s;
-        }
-        .burrowel-text {
-            color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 4px;
-            margin-top: -10px; transition: 0.3s;
-        }
+.core{
 
-        .burrowel-anchor:hover .burrowel-text, .burrowel-anchor.active .burrowel-text { 
-            color: #fff; text-shadow: 0 0 10px #fff; 
-        }
+position:absolute;
+width:140px;
+height:140px;
+border-radius:50%;
 
-        footer { position: fixed; bottom: 30px; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 20px; }
-        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.2); font-size: 9px; }
-    </style>
+background:
+radial-gradient(circle,
+rgba(255,255,255,1) 0%,
+rgba(255,255,255,0.4) 20%,
+rgba(255,255,255,0.1) 40%,
+transparent 70%);
+
+filter:blur(6px);
+
+animation:coreBreath 4s ease-in-out infinite;
+
+}
+
+@keyframes coreBreath{
+
+0%,100%{
+
+transform:scale(1);
+opacity:0.8;
+
+}
+
+50%{
+
+transform:scale(1.15);
+opacity:1;
+
+}
+
+}
+
+
+/* ZOETROPE */
+
+.zoetrope{
+
+position:absolute;
+width:260px;
+height:320px;
+
+transform-style:preserve-3d;
+
+}
+
+
+/* SLICE */
+
+.slice{
+
+position:absolute;
+
+width:160px;
+height:260px;
+
+left:50px;
+top:30px;
+
+transform-style:preserve-3d;
+
+}
+
+
+/* FACE */
+
+.face{
+
+position:absolute;
+width:100%;
+height:100%;
+
+background-size:cover;
+background-position:center;
+
+clip-path:polygon(
+50% 0%,
+85% 12%,
+100% 50%,
+85% 88%,
+50% 100%,
+15% 88%,
+0% 50%,
+15% 12%
+);
+
+}
+
+
+/* LIGHT RESPONSE */
+
+.face::after{
+
+content:"";
+
+position:absolute;
+inset:0;
+
+background:
+linear-gradient(
+90deg,
+rgba(255,255,255,0.3),
+transparent 30%,
+transparent 70%,
+rgba(0,0,0,0.7)
+);
+
+mix-blend-mode:screen;
+
+}
+
+
+/* CANVAS */
+
+canvas{
+
+position:absolute;
+
+}
+
+</style>
 </head>
 <body>
 
-    <div class="dawn-portal" onclick="if(!isDragging) window.location.href='dawn.html'"></div>
-    
-    <div class="zoe-system">
-        <canvas id="dust-core"></canvas>
 
-        <div class="zoetrope-wrapper" id="wrapper">
-            <div class="zoetrope" id="zoetrope">
-                <a href="stcl-detail.html" class="face">
-                    <div style="width:100%; height:100%; background: url('https://googleusercontent.com/image_generation_content/1') center/cover; opacity: 0.6;"></div>
-                    <span>SIGN THE COLD LAND</span>
-                </a>
-                <a href="zoe-ip2.html" class="face">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
-                    <span>IP CORE II</span>
-                </a>
-                <a href="zoe-ip3.html" class="face">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
-                    <span>IP CORE III</span>
-                </a>
-            </div>
-        </div>
+<div class="scene" id="scene">
 
-        <div class="burrowel-anchor" id="burrowelBtn">
-            <div class="burrowel-preview"></div>
-            <div class="burrowel-base"></div>
-            <div class="burrowel-text">BURROWEL</div>
-        </div>
-    </div>
+<div class="core"></div>
 
-    <footer>
-        <button class="minor-ip">Project A</button>
-        <button class="minor-ip">Project B</button>
-        <button class="minor-ip">Project C</button>
-    </footer>
+<div class="zoetrope" id="zoetrope"></div>
 
-    <script>
-        const zoetrope = document.getElementById('zoetrope');
-        const wrapper = document.getElementById('wrapper');
-        const faces = document.querySelectorAll('.face');
-        const burrowelBtn = document.getElementById('burrowelBtn');
-        
-        let currentRotation = 0;
-        let isDragging = false;
-        let startX = 0;
-        let autoRotate = true;
-        let burrowelStep = 0; // 0: chưa chạm, 1: hiện ảnh, 2: đi tiếp
+<canvas id="dust"></canvas>
 
-        // --- TÍNH VÒNG TRÒN HOÀN HẢO & THẺ CONG ---
-        const totalFaces = faces.length;
-        const radius = Math.round((200 / 2) / Math.tan(Math.PI / totalFaces)) + 20; 
+</div>
 
-        faces.forEach((face, i) => {
-            const angle = i * (360 / totalFaces);
-            face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-        });
 
-        function rotate() {
-            if (autoRotate) {
-                currentRotation -= 0.4; 
-                zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
-            }
-            requestAnimationFrame(rotate);
-        }
-        rotate();
+<script>
 
-        // --- XỬ LÝ CLICK 2 BƯỚC CHO BURROWEL ---
-        burrowelBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (burrowelStep === 0) {
-                burrowelBtn.classList.add('active');
-                burrowelStep = 1;
-            } else {
-                window.location.href = 'burrowel.html';
-            }
-        });
 
-        // Reset nếu click ra ngoài
-        document.addEventListener('click', (e) => {
-            if (!burrowelBtn.contains(e.target)) {
-                burrowelBtn.classList.remove('active');
-                burrowelStep = 0;
-            }
-        });
+const zoetrope=document.getElementById("zoetrope")
+const scene=document.getElementById("scene")
 
-        // --- CANVAS BỤI VÀNG LAN TỎA ---
-        const canvas = document.getElementById('dust-core');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 600; canvas.height = 600;
-        const particles = [];
+const canvas=document.getElementById("dust")
+const ctx=canvas.getContext("2d")
 
-        class Particle {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = canvas.width / 2; this.y = canvas.height / 2;
-                this.size = Math.random() * 1.5;
-                this.speedX = (Math.random() - 0.5) * 1.5;
-                this.speedY = (Math.random() - 0.5) * 1.5;
-                this.life = Math.random() * 100 + 50;
-                this.opacity = Math.random() * 0.4;
-            }
-            update() { this.x += this.speedX; this.y += this.speedY; this.life--; if (this.life <= 0) this.reset(); }
-            draw() {
-                ctx.fillStyle = `rgba(255, 215, 100, ${this.opacity})`;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
-        }
-        for (let i = 0; i < 100; i++) particles.push(new Particle());
+canvas.width=600
+canvas.height=600
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
 
-        // --- DRAG LOGIC ---
-        wrapper.addEventListener('mousedown', (e) => { isDragging = true; autoRotate = false; startX = e.pageX; });
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            currentRotation += (e.pageX - startX) * 0.5;
-            zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
-            startX = e.pageX;
-        });
-        window.addEventListener('mouseup', () => { isDragging = false; autoRotate = true; });
-    </script>
+/***********
+CONFIG
+***********/
+
+const total=16
+
+const radius=
+160/(2*Math.tan(Math.PI/total))
+
+
+/***********
+BUILD CYLINDER
+***********/
+
+for(let i=0;i<total;i++){
+
+const slice=document.createElement("div")
+slice.className="slice"
+
+const face=document.createElement("div")
+face.className="face"
+
+face.style.backgroundImage=
+`url(https://picsum.photos/500/700?random=${i})`
+
+slice.appendChild(face)
+
+const angle=i*(360/total)
+
+slice.style.transform=
+`rotateY(${angle}deg) translateZ(${radius}px)`
+
+zoetrope.appendChild(slice)
+
+}
+
+
+/***********
+PHYSICS ENGINE
+***********/
+
+let rotation=0
+let velocity=0.2
+
+let isDragging=false
+let lastX=0
+
+let targetRotation=0
+
+
+function animate(){
+
+rotation+=velocity
+
+velocity*=0.97
+
+zoetrope.style.transform=
+`rotateY(${rotation}deg)`
+
+requestAnimationFrame(animate)
+
+}
+
+animate()
+
+
+/***********
+DRAG
+***********/
+
+window.addEventListener("mousedown",e=>{
+
+isDragging=true
+lastX=e.clientX
+
+})
+
+window.addEventListener("mousemove",e=>{
+
+if(!isDragging)return
+
+let delta=e.clientX-lastX
+
+velocity=delta*0.12
+
+lastX=e.clientX
+
+})
+
+window.addEventListener("mouseup",()=>{
+
+isDragging=false
+
+})
+
+
+/***********
+DUST ORBIT
+***********/
+
+class Particle{
+
+constructor(){
+
+this.angle=Math.random()*Math.PI*2
+
+this.radius=80+Math.random()*200
+
+this.speed=0.002+Math.random()*0.004
+
+this.size=Math.random()*2
+
+}
+
+update(){
+
+this.angle+=this.speed
+
+this.x=
+300+
+Math.cos(this.angle)*this.radius
+
+this.y=
+300+
+Math.sin(this.angle)*this.radius
+
+}
+
+draw(){
+
+ctx.beginPath()
+
+ctx.arc(this.x,this.y,this.size,0,Math.PI*2)
+
+ctx.fillStyle=
+"rgba(255,255,255,0.6)"
+
+ctx.fill()
+
+}
+
+}
+
+
+const particles=[]
+
+for(let i=0;i<200;i++){
+
+particles.push(new Particle())
+
+}
+
+
+function dustEngine(){
+
+ctx.clearRect(0,0,600,600)
+
+particles.forEach(p=>{
+
+p.update()
+p.draw()
+
+})
+
+requestAnimationFrame(dustEngine)
+
+}
+
+dustEngine()
+
+
+/***********
+PROXIMITY AWARENESS
+***********/
+
+let mouseX=0
+
+window.addEventListener("mousemove",e=>{
+
+mouseX=e.clientX
+
+let force=
+(mouseX-window.innerWidth/2)*0.0005
+
+velocity+=force
+
+})
+
+
+</script>
+
 </body>
 </html>

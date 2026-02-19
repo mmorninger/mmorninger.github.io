@@ -7,77 +7,59 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
 
-        /* --- DAWN BACKGROUND --- */
-        .dawn-portal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
-            background-size: cover;
-            z-index: 1; cursor: pointer;
-            filter: brightness(0.4); transition: filter 1s;
+        /* --- UI OVERLAY (TOP) --- */
+        .top-nav {
+            position: fixed; top: 3vh; width: 100%; px: 4vh; 
+            display: flex; justify-content: space-between; align-items: flex-start;
+            z-index: 10; pointer-events: none; /* Để không chặn click vào background */
         }
+        
+        /* Cả hai bên đều cho phép click lại */
+        .top-nav div, .top-nav a { pointer-events: auto; }
+
+        .copyright-mark {
+            margin-left: 4vh;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.1vh; letter-spacing: 0.2vh;
+            text-transform: uppercase;
+        }
+
+        .contact-box {
+            margin-right: 4vh;
+            display: flex; flex-direction: column; align-items: flex-end;
+            cursor: pointer;
+        }
+
+        .contact-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1vh; letter-spacing: 0.2vh;
+            transition: 0.3s;
+        }
+
+        .copy-toast {
+            font-size: 0.9vh; color: rgba(255, 255, 255, 0.2);
+            margin-top: 0.5vh; opacity: 0; transition: 0.3s;
+        }
+
+        .contact-box:hover .contact-label { color: #fff; text-shadow: 0 0 1vh #fff; }
+
+        /* --- CÁC PHẦN CÒN LẠI GIỮ NGUYÊN --- */
+        .dawn-portal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center; background-size: cover; z-index: 1; cursor: pointer; filter: brightness(0.4); transition: filter 1s; }
         .dawn-portal:hover { filter: brightness(0.6); }
-
         .stcl-atmosphere { position: fixed; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-
-        /* --- WORLD ZOE SYSTEM --- */
-        .zoe-system {
-            position: relative; z-index: 3; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 150vh; /* Tăng phối cảnh theo tỉ lệ màn hình */
-        }
-
-        #dust-core {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .zoetrope-wrapper {
-            width: 25vh; height: 35vh; /* Tỉ lệ dựa trên chiều cao màn hình */
-            transform-style: preserve-3d;
-            cursor: grab;
-            z-index: 4;
-        }
+        .zoe-system { position: relative; z-index: 3; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; perspective: 150vh; }
+        #dust-core { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        .zoetrope-wrapper { width: 25vh; height: 35vh; transform-style: preserve-3d; cursor: grab; z-index: 4; }
         .zoetrope-wrapper:active { cursor: grabbing; }
-
         .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
-
-        .face {
-            position: absolute; width: 25vh; height: 35vh;
-            background: rgba(15, 15, 15, 0.9); 
-            border: 0.1vh solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: #fff; transition: border 0.3s;
-            backface-visibility: visible;
-            user-select: none;
-            border-radius: 1.5vh;
-            clip-path: ellipse(95% 100% at 50% 50%);
-        }
+        .face { position: absolute; width: 25vh; height: 35vh; background: rgba(15, 15, 15, 0.9); border: 0.1vh solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; color: #fff; transition: border 0.3s; backface-visibility: visible; user-select: none; border-radius: 1.5vh; clip-path: ellipse(95% 100% at 50% 50%); }
         .face:hover { border-color: rgba(255,255,255,0.5); }
         .face span { font-size: 1.2vh; letter-spacing: 0.3vh; margin-top: 2vh; text-align: center; }
-
-        /* --- BURROWEL BASE --- */
-        .burrowel-anchor {
-            text-decoration: none; position: relative; z-index: 5;
-            display: flex; flex-direction: column; align-items: center;
-            margin-top: 8vh; transition: 0.5s;
-        }
-        .burrowel-base {
-            width: 30vh; height: 6vh;
-            background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%);
-            transform: rotateX(75deg); border-radius: 50%;
-            border: 0.1vh solid rgba(255,255,255,0.05);
-            box-shadow: 0 0 4vh rgba(255,255,255,0.1);
-        }
-        .burrowel-text {
-            color: rgba(255,255,255,0.4); font-size: 1.4vh; letter-spacing: 0.5vh;
-            margin-top: -1.5vh; transition: 0.3s;
-        }
+        .burrowel-anchor { text-decoration: none; position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; margin-top: 8vh; transition: 0.5s; }
+        .burrowel-base { width: 30vh; height: 6vh; background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%); transform: rotateX(75deg); border-radius: 50%; border: 0.1vh solid rgba(255,255,255,0.05); box-shadow: 0 0 4vh rgba(255,255,255,0.1); }
+        .burrowel-text { color: rgba(255,255,255,0.4); font-size: 1.4vh; letter-spacing: 0.5vh; margin-top: -1.5vh; transition: 0.3s; }
         .burrowel-anchor:hover .burrowel-base { background: rgba(255,255,255,0.3); box-shadow: 0 0 6vh rgba(255,255,255,0.3); }
         .burrowel-anchor:hover .burrowel-text { color: #fff; text-shadow: 0 0 1vh #fff; }
-
         footer { position: fixed; bottom: 4vh; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 3vh; }
         .minor-ip { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 1.2vh; cursor: pointer; transition: 0.3s; }
         .minor-ip:hover { color: #fff; }
@@ -85,12 +67,22 @@
 </head>
 <body>
 
+    <div class="top-nav">
+        <div class="copyright-mark">
+            © 2026 MORNINGER UNIVERSE
+        </div>
+
+        <div class="contact-box" onclick="copyEmail()">
+            <span class="contact-label">CONTACT</span>
+            <span id="copy-status" class="copy-toast">m.morniger@gmail.com COPIED</span>
+        </div>
+    </div>
+
     <div class="dawn-portal" onclick="if(!isDragging) window.location.href='dawn.html'"></div>
     <div class="stcl-atmosphere"></div>
 
     <div class="zoe-system">
         <canvas id="dust-core"></canvas>
-
         <div class="zoetrope-wrapper" id="wrapper">
             <div class="zoetrope" id="zoetrope">
                 <a href="stcl-detail.html" class="face" onclick="if(isDragging) return false;">
@@ -107,7 +99,6 @@
                 </a>
             </div>
         </div>
-
         <a href="burrowel.html" class="burrowel-anchor">
             <div class="burrowel-base"></div>
             <div class="burrowel-text">BURROWEL</div>
@@ -121,103 +112,61 @@
     </footer>
 
     <script>
+        // --- CHỨC NĂNG COPY EMAIL ---
+        function copyEmail() {
+            const email = "m.morniger@gmail.com";
+            navigator.clipboard.writeText(email);
+            
+            const status = document.getElementById('copy-status');
+            status.style.opacity = "1";
+            
+            // Ẩn lại sau 2 giây
+            setTimeout(() => {
+                status.style.opacity = "0";
+            }, 2000);
+        }
+
+        // --- GIỮ NGUYÊN LOGIC XOAY VÀ LAYOUT CŨ ---
         const zoetrope = document.getElementById('zoetrope');
         const wrapper = document.getElementById('wrapper');
         const faces = document.querySelectorAll('.face');
         const canvas = document.getElementById('dust-core');
         const ctx = canvas.getContext('2d');
-        
-        let currentRotation = 0;
-        let isDragging = false;
-        let startX = 0;
-        let autoRotate = true;
+        let currentRotation = 0; let isDragging = false; let startX = 0; let autoRotate = true;
 
-        // --- CẬP NHẬT KÍCH THƯỚC VÀ VỊ TRÍ ---
         function updateLayout() {
-            // Cập nhật Canvas
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            // Tính toán bán kính vòng xoay động
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             const totalFaces = faces.length;
             const faceWidth = faces[0].offsetWidth;
             const radius = Math.round((faceWidth / 2) / Math.tan(Math.PI / totalFaces)) + 20; 
-
             faces.forEach((face, i) => {
                 const angle = i * (360 / totalFaces);
                 face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
             });
         }
 
-        // --- TỰ ĐỘNG XOAY ---
         function rotate() {
-            if (autoRotate) {
-                currentRotation -= 0.3; 
-                zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
-            }
+            if (autoRotate) { currentRotation -= 0.3; zoetrope.style.transform = `rotateY(${currentRotation}deg)`; }
             requestAnimationFrame(rotate);
         }
 
-        // --- HỆ THỐNG HẠT ---
+        // (Particles code giữ nguyên...)
         const particles = [];
         class Particle {
             constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.2;
-                this.speedX = (Math.random() - 0.5) * 0.8;
-                this.speedY = (Math.random() - 0.5) * 0.8;
-                this.life = Math.random() * 150 + 50;
-                this.opacity = Math.random() * 0.4;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life--;
-                if (this.life <= 0) this.reset();
-            }
-            draw() {
-                ctx.fillStyle = `rgba(255, 220, 100, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            reset() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 1.5 + 0.2; this.speedX = (Math.random() - 0.5) * 0.8; this.speedY = (Math.random() - 0.5) * 0.8; this.life = Math.random() * 150 + 50; this.opacity = Math.random() * 0.4; }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life--; if (this.life <= 0) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(255, 220, 100, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-
         for (let i = 0; i < 80; i++) particles.push(new Particle());
+        function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-
-        // --- KHỞI CHẠY ---
         window.addEventListener('resize', updateLayout);
-        updateLayout();
-        rotate();
-        animateParticles();
+        updateLayout(); rotate(); animateParticles();
 
-        // --- XỬ LÝ SỰ KIỆN CHUỘT/TOUCH ---
-        const startAction = (e) => {
-            isDragging = true;
-            autoRotate = false;
-            startX = e.pageX || e.touches[0].pageX;
-        };
-
-        const moveAction = (e) => {
-            if (!isDragging) return;
-            const x = e.pageX || e.touches[0].pageX;
-            const delta = (x - startX) * 0.3;
-            currentRotation += delta;
-            zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
-            startX = x;
-        };
-
-        const endAction = () => {
-            isDragging = false;
-        };
+        const startAction = (e) => { isDragging = true; autoRotate = false; startX = e.pageX || e.touches[0].pageX; };
+        const moveAction = (e) => { if (!isDragging) return; const x = e.pageX || e.touches[0].pageX; currentRotation += (x - startX) * 0.3; zoetrope.style.transform = `rotateY(${currentRotation}deg)`; startX = x; };
+        const endAction = () => { isDragging = false; };
 
         wrapper.addEventListener('mousedown', startAction);
         wrapper.addEventListener('touchstart', startAction);
@@ -225,7 +174,6 @@
         window.addEventListener('touchmove', moveAction);
         window.addEventListener('mouseup', endAction);
         window.addEventListener('touchend', endAction);
-
         wrapper.addEventListener('mouseenter', () => autoRotate = false);
         wrapper.addEventListener('mouseleave', () => { if(!isDragging) autoRotate = true; });
     </script>

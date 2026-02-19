@@ -9,12 +9,10 @@
 
         /* --- UI OVERLAY (TOP) --- */
         .top-nav {
-            position: fixed; top: 3vh; width: 100%; px: 4vh; 
+            position: fixed; top: 3vh; width: 100%; 
             display: flex; justify-content: space-between; align-items: flex-start;
-            z-index: 10; pointer-events: none; /* Để không chặn click vào background */
+            z-index: 10; pointer-events: none;
         }
-        
-        /* Cả hai bên đều cho phép click lại */
         .top-nav div, .top-nav a { pointer-events: auto; }
 
         .copyright-mark {
@@ -32,46 +30,74 @@
 
         .contact-label {
             color: rgba(255, 255, 255, 0.5);
-            font-size: 1.1vh; letter-spacing: 0.2vh;
+            font-size: 1.3vh; letter-spacing: 0.2vh; /* Tăng nhẹ font Contact */
             transition: 0.3s;
         }
 
+        /* --- THÔNG BÁO COPY TO & RÕ --- */
         .copy-toast {
-            font-size: 0.9vh; color: rgba(255, 255, 255, 0.2);
-            margin-top: 0.5vh; opacity: 0; transition: 0.3s;
+            font-size: 1.5vh; /* Làm to hẳn lên */
+            color: #fff; /* Chuyển sang màu trắng để nổi bật */
+            margin-top: 1vh; 
+            opacity: 0; 
+            transition: 0.4s;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
         .contact-box:hover .contact-label { color: #fff; text-shadow: 0 0 1vh #fff; }
 
-        /* --- CÁC PHẦN CÒN LẠI GIỮ NGUYÊN --- */
+        /* --- DAWN BACKGROUND --- */
         .dawn-portal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center; background-size: cover; z-index: 1; cursor: pointer; filter: brightness(0.4); transition: filter 1s; }
         .dawn-portal:hover { filter: brightness(0.6); }
+
         .stcl-atmosphere { position: fixed; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+        /* --- WORLD ZOE SYSTEM --- */
         .zoe-system { position: relative; z-index: 3; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; perspective: 150vh; }
         #dust-core { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        
         .zoetrope-wrapper { width: 25vh; height: 35vh; transform-style: preserve-3d; cursor: grab; z-index: 4; }
         .zoetrope-wrapper:active { cursor: grabbing; }
         .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
+
         .face { position: absolute; width: 25vh; height: 35vh; background: rgba(15, 15, 15, 0.9); border: 0.1vh solid rgba(255,255,255,0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; text-decoration: none; color: #fff; transition: border 0.3s; backface-visibility: visible; user-select: none; border-radius: 1.5vh; clip-path: ellipse(95% 100% at 50% 50%); }
         .face:hover { border-color: rgba(255,255,255,0.5); }
         .face span { font-size: 1.2vh; letter-spacing: 0.3vh; margin-top: 2vh; text-align: center; }
+
+        /* --- BURROWEL BASE --- */
         .burrowel-anchor { text-decoration: none; position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; margin-top: 8vh; transition: 0.5s; }
         .burrowel-base { width: 30vh; height: 6vh; background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%); transform: rotateX(75deg); border-radius: 50%; border: 0.1vh solid rgba(255,255,255,0.05); box-shadow: 0 0 4vh rgba(255,255,255,0.1); }
         .burrowel-text { color: rgba(255,255,255,0.4); font-size: 1.4vh; letter-spacing: 0.5vh; margin-top: -1.5vh; transition: 0.3s; }
         .burrowel-anchor:hover .burrowel-base { background: rgba(255,255,255,0.3); box-shadow: 0 0 6vh rgba(255,255,255,0.3); }
         .burrowel-anchor:hover .burrowel-text { color: #fff; text-shadow: 0 0 1vh #fff; }
-        footer { position: fixed; bottom: 4vh; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 3vh; }
-        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 1.2vh; cursor: pointer; transition: 0.3s; }
+
+        /* --- FOOTER PROJECT --- */
+        footer { 
+            position: fixed; 
+            bottom: 10vh; /* Đẩy lên cao hơn (cũ là 4vh) */
+            width: 100%; 
+            z-index: 4; 
+            display: flex; 
+            justify-content: center; 
+            gap: 5vh; /* Tăng khoảng cách giữa các project */
+        }
+        
+        .minor-ip { 
+            background: none; border: none; 
+            color: rgba(255,255,255,0.3); 
+            cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center;
+        }
         .minor-ip:hover { color: #fff; }
+
+        .ip-name { font-size: 1.5vh; letter-spacing: 0.2vh; font-weight: bold; }
+        .ip-sub { font-size: 0.9vh; letter-spacing: 0.1vh; opacity: 0.6; margin-top: 0.3vh; }
     </style>
 </head>
 <body>
 
     <div class="top-nav">
-        <div class="copyright-mark">
-            © 2026 MORNINGER UNIVERSE
-        </div>
-
+        <div class="copyright-mark">© 2026 MORNINGER UNIVERSE</div>
         <div class="contact-box" onclick="copyEmail()">
             <span class="contact-label">CONTACT</span>
             <span id="copy-status" class="copy-toast">m.morniger@gmail.com COPIED</span>
@@ -106,27 +132,26 @@
     </div>
 
     <footer>
-        <button class="minor-ip">Project A</button>
-        <button class="minor-ip">Project B</button>
-        <button class="minor-ip">Project C</button>
+        <button class="minor-ip">
+            <span class="ip-name">Hội Chứng</span>
+            <span class="ip-sub">(Syndrome)</span>
+        </button>
+        <button class="minor-ip">
+            <span class="ip-name">Project B</span>
+        </button>
+        <button class="minor-ip">
+            <span class="ip-name">Project C</span>
+        </button>
     </footer>
 
     <script>
-        // --- CHỨC NĂNG COPY EMAIL ---
         function copyEmail() {
-            const email = "m.morniger@gmail.com";
-            navigator.clipboard.writeText(email);
-            
+            navigator.clipboard.writeText("m.morniger@gmail.com");
             const status = document.getElementById('copy-status');
             status.style.opacity = "1";
-            
-            // Ẩn lại sau 2 giây
-            setTimeout(() => {
-                status.style.opacity = "0";
-            }, 2000);
+            setTimeout(() => { status.style.opacity = "0"; }, 2500);
         }
 
-        // --- GIỮ NGUYÊN LOGIC XOAY VÀ LAYOUT CŨ ---
         const zoetrope = document.getElementById('zoetrope');
         const wrapper = document.getElementById('wrapper');
         const faces = document.querySelectorAll('.face');
@@ -150,7 +175,6 @@
             requestAnimationFrame(rotate);
         }
 
-        // (Particles code giữ nguyên...)
         const particles = [];
         class Particle {
             constructor() { this.reset(); }

@@ -1,47 +1,113 @@
-<style>
-    /* 1. Tạo không gian tối sâu thẳm */
-    body {
-        background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-        perspective: 1200px; 
-    }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Morninger Universe | DAWN - ZOE - STCL</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
 
-    .zoetrope {
-        width: 250px;
-        height: 350px;
-        transform-style: preserve-3d;
-        animation: rotate 25s infinite linear;
-    }
+        /* --- IP DAWN: THE CORE BACKGROUND (Clickable) --- */
+        .dawn-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('http://googleusercontent.com/image_collection/image_retrieval/14374795175088520890_0') no-repeat center center;
+            background-size: cover;
+            z-index: 1; cursor: pointer;
+            filter: brightness(0.4);
+            transition: 2s;
+        }
+        .dawn-bg:hover { filter: brightness(0.6); }
 
-    /* 2. Hiệu ứng dừng lại khi di chuột (Hover) */
-    .zoetrope:hover {
-        animation-play-state: paused; /* Đạo diễn ra lệnh: STOP! */
-    }
+        /* --- SIGN THE COLD LAND: FLOATING MIST --- */
+        .stcl-layer {
+            position: fixed; width: 100%; height: 100%; z-index: 2;
+            pointer-events: none;
+            background: url('http://googleusercontent.com/image_collection/image_retrieval/3869349088920441612_0') repeat;
+            opacity: 0.3;
+            animation: drift 30s infinite alternate;
+        }
 
-    .face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border: 1px solid rgba(255,255,255,0.2);
-        
-        /* 3. ĐÂY LÀ CHỖ TƯ DUY NGƯỢC: Hiệu ứng tiêu cự */
-        transition: all 0.8s ease;
-        filter: blur(4px); /* Mặc định là mờ (xóa phông) */
-        opacity: 0.3;      /* Mặc định là tối đi */
-    }
+        /* --- WORLD ZOE: THE ZOETROPE SYSTEM --- */
+        .world-zoe-container {
+            position: relative; z-index: 3; height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            perspective: 2000px;
+        }
 
-    /* 4. Logic: Mặt nào ở gần (phía trước) thì rõ nét */
-    /* Chúng ta dùng JavaScript hoặc CSS để "bắt" mặt đang ở gần nhất */
-    
-    /* Demo đơn giản: Khi di chuột vào mặt nào, mặt đó sáng bừng và rõ nét */
-    .face:hover {
-        filter: blur(0px);   /* Hết mờ */
-        opacity: 1;          /* Sáng trưng */
-        box-shadow: 0 0 30px rgba(255,255,255,0.5); /* Phát sáng nhẹ */
-        border: 1px solid #fff;
-    }
+        /* Đế BURROWEL - Tối và sâu thẳm */
+        .burrowel-base {
+            width: 400px; height: 60px; 
+            background: radial-gradient(ellipse at center, #222 0%, #000 80%);
+            transform: rotateX(75deg); border-radius: 50%;
+            box-shadow: 0 30px 100px #000;
+            margin-top: -30px; border: 1px solid rgba(255,255,255,0.05);
+        }
 
-    @keyframes rotate {
-        from { transform: rotateY(0deg); }
-        to { transform: rotateY(360deg); }
-    }
-</style>
+        .zoetrope {
+            width: 250px; height: 350px; transform-style: preserve-3d;
+            animation: rotateZoe 20s infinite linear;
+        }
+
+        .face {
+            position: absolute; width: 250px; height: 350px;
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: #fff; text-decoration: none; transition: 0.5s;
+            overflow: hidden;
+        }
+        .face img { width: 100%; height: 80%; object-fit: cover; opacity: 0.7; transition: 0.5s; }
+        .face:hover img { opacity: 1; transform: scale(1.1); }
+        .face span { margin-top: 10px; font-weight: bold; letter-spacing: 2px; }
+
+        /* 3 mặt của ZOE World - Xoay quanh trục */
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(250px); }
+        .face:nth-child(2) { transform: rotateY(120deg) translateZ(250px); }
+        .face:nth-child(3) { transform: rotateY(240deg) translateZ(250px); }
+
+        /* --- FOOTER: SMALLER IPs --- */
+        footer {
+            position: fixed; bottom: 40px; width: 100%; z-index: 4;
+            display: flex; justify-content: center; gap: 15px;
+        }
+        .ip-button {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+            color: #888; padding: 6px 20px; border-radius: 4px; cursor: pointer;
+            font-size: 11px; transition: 0.3s; text-transform: uppercase;
+        }
+        .ip-button:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.15); }
+
+        @keyframes rotateZoe { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+        @keyframes drift { from { transform: translate(-2%, -2%); } to { transform: translate(2%, 2%); } }
+    </style>
+</head>
+<body>
+
+    <div class="dawn-bg" title="Explore DAWN" onclick="window.location.href='dawn.html'"></div>
+
+    <div class="stcl-layer"></div>
+
+    <div class="world-zoe-container">
+        <div class="zoetrope">
+            <a href="zoe-ip1.html" class="face">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/14527370949784330006_0" alt="ZOE IP 1">
+                <span>ZOE CORE I</span>
+            </a>
+            <a href="zoe-ip2.html" class="face">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/14527370949784330006_0" alt="ZOE IP 2">
+                <span>ZOE CORE II</span>
+            </a>
+            <a href="zoe-ip3.html" class="face">
+                <img src="http://googleusercontent.com/image_collection/image_retrieval/14527370949784330006_0" alt="ZOE IP 3">
+                <span>ZOE CORE III</span>
+            </a>
+        </div>
+        <div class="burrowel-base"></div>
+    </div>
+
+    <footer>
+        <button class="ip-button" onclick="location.href='mini-a.html'">Minor IP A</button>
+        <button class="ip-button" onclick="location.href='mini-b.html'">Minor IP B</button>
+        <button class="ip-button" onclick="location.href='mini-c.html'">Minor IP C</button>
+    </footer>
+
+</body>
+</html>

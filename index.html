@@ -7,46 +7,20 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
 
-        /* --- UI OVERLAY (TOP) --- */
+        /* --- UI OVERLAY --- */
         .top-nav {
             position: fixed; top: 3vh; width: 100%; 
             display: flex; justify-content: space-between; align-items: flex-start;
             z-index: 10; pointer-events: none;
         }
         .top-nav div, .top-nav a { pointer-events: auto; }
-
-        .copyright-mark {
-            margin-left: 4vh;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 1.1vh; letter-spacing: 0.2vh;
-            text-transform: uppercase;
-        }
-
-        .contact-box {
-            margin-right: 4vh;
-            display: flex; flex-direction: column; align-items: flex-end;
-            cursor: pointer;
-        }
-
-        .contact-label {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1.3vh; letter-spacing: 0.2vh;
-            transition: 0.3s;
-        }
-
-        .copy-toast {
-            font-size: 1.5vh;
-            color: #fff;
-            margin-top: 1vh; 
-            opacity: 0; 
-            transition: 0.4s;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            font-weight: bold;
-        }
-
+        .copyright-mark { margin-left: 4vh; color: rgba(255, 255, 255, 0.3); font-size: 1.1vh; letter-spacing: 0.2vh; text-transform: uppercase; }
+        .contact-box { margin-right: 4vh; display: flex; flex-direction: column; align-items: flex-end; cursor: pointer; }
+        .contact-label { color: rgba(255, 255, 255, 0.5); font-size: 1.3vh; letter-spacing: 0.2vh; transition: 0.3s; }
         .contact-box:hover .contact-label { color: #fff; text-shadow: 0 0 1vh #fff; }
+        .copy-toast { font-size: 1.5vh; color: #fff; margin-top: 1vh; opacity: 0; transition: 0.4s; text-shadow: 0 0 10px rgba(255,255,255,0.5); font-weight: bold; }
 
-        /* --- DAWN BACKGROUND --- */
+        /* --- BACKGROUND --- */
         .dawn-portal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center; background-size: cover; z-index: 1; cursor: pointer; filter: brightness(0.4); transition: filter 1s; }
         .dawn-portal:hover { filter: brightness(0.6); }
         .stcl-atmosphere { position: fixed; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
@@ -58,109 +32,63 @@
         .zoetrope-wrapper:active { cursor: grabbing; }
         .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.1s ease-out; }
 
-        /* --- GLOW CHO THẺ BÀI --- */
+        /* --- THẺ BÀI (FACE) - FIX LỖI THỤT RA VÔ --- */
         .face { 
             position: absolute; width: 25vh; height: 35vh; background: rgba(15, 15, 15, 0.9); 
             border: 0.1vh solid rgba(255,255,255,0.1); display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-decoration: none; color: #fff; 
-            transition: border 0.3s, box-shadow 0.3s, transform 0.3s; 
             backface-visibility: visible; user-select: none; border-radius: 1.5vh; 
             clip-path: ellipse(95% 100% at 50% 50%); 
-            box-shadow: 0 0 1vh rgba(255,255,255,0.05);
+            transition: border 0.3s;
         }
-        .face:hover { 
-            border-color: rgba(255,255,255,0.8); 
-            box-shadow: 0 0 3vh rgba(255,255,255,0.3); 
-            transform: scale(1.02) !important; /* Giữ nguyên transform gốc và scale nhẹ */
-        }
-        .face span { font-size: 1.2vh; letter-spacing: 0.3vh; margin-top: 2vh; text-align: center; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
 
-        /* --- BURROWEL SECTION --- */
+        /* Lớp phủ hình ảnh bên trong thẻ */
+        .face-img {
+            width: 100%; height: 100%; 
+            transition: opacity 0.4s, box-shadow 0.4s;
+            opacity: 0.6;
+        }
+
+        /* CHỈ SÁNG KHI HOVER VÀO HÌNH */
+        .face:hover { border-color: rgba(255,255,255,0.5); }
+        .face:hover .face-img { 
+            opacity: 1; 
+            box-shadow: inset 0 0 3vh rgba(255,255,255,0.3), 0 0 2vh rgba(255,255,255,0.2);
+        }
+        .face span { font-size: 1.2vh; letter-spacing: 0.3vh; margin-top: 2vh; text-align: center; pointer-events: none; }
+
+        /* --- BURROWEL - THU HẸP VÙNG HOVER --- */
         .burrowel-anchor { 
             text-decoration: none; position: relative; z-index: 5; 
             display: flex; flex-direction: column; align-items: center; 
-            margin-top: 8vh; transition: 0.5s; 
-            padding: 2vh; /* Mở rộng vùng hover */
+            margin-top: 6vh; transition: 0.5s; 
+            padding: 1.5vh 5vh; /* Thu hẹp chiều cao (1.5) để không dính Zoetrope */
         }
-
-        .rabbit-container {
-            height: 5vh; 
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-            pointer-events: none;
-        }
-
-        .rabbit-magic {
-            font-size: 3.5vh;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .rabbit-container { height: 5vh; overflow: hidden; display: flex; align-items: flex-end; pointer-events: none; }
+        .rabbit-magic { font-size: 3.5vh; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .burrowel-anchor:hover .rabbit-magic { transform: translateY(0); }
-
         .burrowel-base { width: 30vh; height: 6vh; background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%); transform: rotateX(75deg); border-radius: 50%; border: 0.1vh solid rgba(255,255,255,0.05); box-shadow: 0 0 4vh rgba(255,255,255,0.1); }
-        .burrowel-text { 
-            color: rgba(255,255,255,0.4); font-size: 1.4vh; letter-spacing: 0.5vh; 
-            margin-top: -1.5vh; transition: 0.3s; 
-            text-shadow: 0 0 5px rgba(255,255,255,0.1);
-        }
-        .burrowel-anchor:hover .burrowel-text { 
-            color: #fff; 
-            text-shadow: 0 0 1.5vh #fff; 
-        }
+        .burrowel-text { color: rgba(255,255,255,0.4); font-size: 1.4vh; letter-spacing: 0.5vh; margin-top: -1.5vh; transition: 0.3s; }
+        .burrowel-anchor:hover .burrowel-text { color: #fff; text-shadow: 0 0 10px #fff; }
 
-        /* --- FOOTER & MOBILE FIX --- */
+        /* --- FOOTER MOBILE FIX --- */
         footer { 
-            position: fixed; 
-            bottom: 8vh; 
-            width: 100%; 
-            z-index: 4; 
-            display: flex; 
-            justify-content: center; 
-            gap: 6vh; 
-            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+            position: fixed; bottom: 8vh; width: 100%; z-index: 4; 
+            display: flex; justify-content: center; gap: 6vh; flex-wrap: wrap;
         }
-        
-        .minor-ip { 
-            background: none; border: none; 
-            color: rgba(255,255,255,0.3); 
-            cursor: pointer; transition: 0.3s;
-            display: flex; flex-direction: column; align-items: center;
-            text-shadow: 0 0 5px rgba(255,255,255,0.1);
-        }
-        .minor-ip:hover { 
-            color: #fff; 
-            text-shadow: 0 0 1.5vh #fff; 
-        }
-        .minor-ip:hover .ip-name { text-decoration: underline rgba(255,255,255,0.3) 1px; text-underline-offset: 4px; }
-
+        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
+        .minor-ip:hover { color: #fff; text-shadow: 0 0 10px #fff; }
         .ip-name { font-size: 1.6vh; letter-spacing: 0.2vh; font-weight: bold; text-transform: uppercase; }
         .ip-sub { font-size: 1vh; letter-spacing: 0.1vh; opacity: 0.6; margin-top: 0.5vh; }
-        
         .upcoming { cursor: default; }
-        .upcoming:hover { color: rgba(255,255,255,0.3); text-shadow: none; }
+        .upcoming:hover { color: rgba(255,255,255,0.3); }
         .upcoming .ip-name { letter-spacing: 0.4vh; font-weight: normal; opacity: 0.5; }
 
-        /* --- MEDIA QUERIES FOR MOBILE --- */
         @media (max-width: 768px) {
-            footer {
-                bottom: 2vh; /* Đẩy footer xuống thấp hơn trên mobile */
-                gap: 2vh;
-                padding: 0 2vh;
-            }
-            .burrowel-anchor {
-                margin-top: 4vh; /* Thu nhỏ khoảng cách để không đè footer */
-            }
-            .zoetrope-wrapper {
-                width: 20vh; height: 28vh; /* Thu nhỏ Zoetrope một chút trên mobile */
-            }
-            .face {
-                width: 20vh; height: 28vh;
-            }
-            .ip-name { font-size: 1.2vh; }
+            footer { bottom: 3vh; gap: 3vh; }
+            .burrowel-anchor { margin-top: 3vh; }
+            .ip-name { font-size: 1.3vh; }
         }
-
     </style>
 </head>
 <body>
@@ -181,15 +109,15 @@
         <div class="zoetrope-wrapper" id="wrapper">
             <div class="zoetrope" id="zoetrope">
                 <a href="stcl-detail.html" class="face" onclick="if(isDragging) return false;">
-                    <div style="width:100%; height:100%; background: url('https://googleusercontent.com/image_generation_content/1') center; background-size: cover; opacity: 0.6;"></div>
+                    <div class="face-img" style="background: url('https://googleusercontent.com/image_generation_content/1') center; background-size: cover;"></div>
                     <span>SIGN THE COLD LAND</span>
                 </a>
                 <a href="zoe-ip2.html" class="face" onclick="if(isDragging) return false;">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
+                    <div class="face-img" style="background: #1a1a1a;"></div>
                     <span>IP CORE II</span>
                 </a>
                 <a href="zoe-ip3.html" class="face" onclick="if(isDragging) return false;">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
+                    <div class="face-img" style="background: #1a1a1a;"></div>
                     <span>IP CORE III</span>
                 </a>
             </div>
@@ -247,7 +175,6 @@
             requestAnimationFrame(rotate);
         }
 
-        // --- DUST PARTICLES ---
         const particles = [];
         class Particle {
             constructor() { this.reset(); }

@@ -7,68 +7,71 @@
     <style>
         body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
 
-        /* --- DAWN BACKGROUND: CLICKABLE EVERYWHERE --- */
+        /* --- DAWN BACKGROUND --- */
         .dawn-portal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
             background-size: cover;
-            z-index: 1; 
-            cursor: pointer; /* ĐÃ THÊM BÀN TAY Ở ĐÂY */
+            z-index: 1; cursor: pointer;
             filter: brightness(0.4); transition: filter 1s;
         }
         .dawn-portal:hover { filter: brightness(0.6); }
 
-        /* --- STCL ATMOSPHERE --- */
-        .stcl-atmosphere {
-            position: fixed; width: 100%; height: 100%; z-index: 2; pointer-events: none;
-            background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.5));
-        }
+        .stcl-atmosphere { position: fixed; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 
-        /* --- WORLD ZOE: INTERACTIVE ZOETROPE --- */
+        /* --- WORLD ZOE SYSTEM --- */
         .zoe-system {
             position: relative; z-index: 3; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 1500px;
+            perspective: 1000px;
         }
 
         .zoetrope-wrapper {
-            width: 250px; height: 350px;
+            width: 200px; height: 280px; /* Nhỏ hơn xíu */
             transform-style: preserve-3d;
-            cursor: grab; /* Biểu tượng bàn tay nắm khi vào Zoetrope */
+            cursor: grab;
         }
         .zoetrope-wrapper:active { cursor: grabbing; }
 
-        .zoetrope {
-            width: 100%; height: 100%;
-            transform-style: preserve-3d;
-            /* Animation tự động sẽ được điều khiển bằng JS */
-        }
+        .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; }
 
         .face {
-            position: absolute; width: 250px; height: 350px;
+            position: absolute; width: 200px; height: 280px;
             background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255,255,255,0.1);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-decoration: none; color: #fff; transition: border 0.3s;
-            backface-visibility: hidden;
-            user-select: none;
+            backface-visibility: hidden; user-select: none;
         }
         .face:hover { border-color: #fff; }
-        .face span { font-size: 11px; letter-spacing: 3px; margin-top: 20px; opacity: 0.7; }
+        .face span { font-size: 10px; letter-spacing: 2px; margin-top: 15px; text-align: center; }
 
-        /* Vị trí 3 mặt IP Lõi */
-        .face:nth-child(1) { transform: rotateY(0deg) translateZ(250px); }
-        .face:nth-child(2) { transform: rotateY(120deg) translateZ(250px); }
-        .face:nth-child(3) { transform: rotateY(240deg) translateZ(250px); }
+        /* KHOẢNG CÁCH SÁT NHAU HƠN (130px) */
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(130px); }
+        .face:nth-child(2) { transform: rotateY(120deg) translateZ(130px); }
+        .face:nth-child(3) { transform: rotateY(240deg) translateZ(130px); }
 
-        .burrowel-core {
-            width: 400px; height: 60px; margin-top: 20px;
-            background: radial-gradient(ellipse at center, #222 0%, transparent 80%);
-            transform: rotateX(80deg); border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255,255,255,0.05);
+        /* --- BURROWEL BASE: CLICKABLE --- */
+        .burrowel-anchor {
+            text-decoration: none; position: relative; z-index: 5;
+            display: flex; flex-direction: column; align-items: center;
+            margin-top: 40px; transition: 0.5s;
         }
+        .burrowel-base {
+            width: 180px; height: 30px;
+            background: radial-gradient(ellipse at center, #333 0%, transparent 80%);
+            transform: rotateX(75deg); border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+        .burrowel-text {
+            color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 4px;
+            margin-top: -10px; transition: 0.3s;
+        }
+        .burrowel-anchor:hover .burrowel-base { background: #555; box-shadow: 0 0 40px rgba(255,255,255,0.2); }
+        .burrowel-anchor:hover .burrowel-text { color: #fff; text-shadow: 0 0 10px #fff; }
 
-        footer { position: fixed; bottom: 30px; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 25px; }
-        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 10px; cursor: pointer; text-transform: uppercase; }
+        footer { position: fixed; bottom: 30px; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 20px; }
+        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 9px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -93,7 +96,11 @@
                 </a>
             </div>
         </div>
-        <div class="burrowel-core"></div>
+
+        <a href="burrowel.html" class="burrowel-anchor">
+            <div class="burrowel-base"></div>
+            <div class="burrowel-text">BURROWEL</div>
+        </a>
     </div>
 
     <footer>
@@ -110,50 +117,37 @@
         let startX = 0;
         let autoRotate = true;
 
-        // Xoay tự động
         function rotate() {
             if (autoRotate) {
-                currentRotation -= 0.2; // Tốc độ xoay tự động
+                currentRotation -= 0.5; // XOAY NHANH HƠN
                 zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
             }
             requestAnimationFrame(rotate);
         }
         rotate();
 
-        // Xử lý khi chạm/rê chuột
-        wrapper.addEventListener('mousedown', startAction);
-        wrapper.addEventListener('touchstart', startAction);
+        wrapper.addEventListener('mousedown', (e) => { isDragging = true; autoRotate = false; startX = e.pageX; });
+        wrapper.addEventListener('touchstart', (e) => { isDragging = true; autoRotate = false; startX = e.touches[0].pageX; });
 
-        window.addEventListener('mousemove', moveAction);
-        window.addEventListener('touchmove', moveAction);
-
-        window.addEventListener('mouseup', endAction);
-        window.addEventListener('touchend', endAction);
-
-        function startAction(e) {
-            isDragging = true;
-            autoRotate = false; // Ngừng xoay tự động
-            startX = e.pageX || e.touches[0].pageX;
-        }
-
-        function moveAction(e) {
+        window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            const x = e.pageX || e.touches[0].pageX;
-            const diff = x - startX;
-            currentRotation += diff * 0.5; // Tốc độ xoay theo tay
+            const x = e.pageX;
+            currentRotation += (x - startX) * 0.5;
             zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
             startX = x;
-        }
+        });
 
-        function endAction() {
+        window.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            isDragging = false;
-            // Muốn xoay tự động lại sau khi thả ra? 
-            // Nếu muốn, hãy bỏ comment dòng dưới:
-            // setTimeout(() => { autoRotate = true; }, 3000); 
-        }
+            const x = e.touches[0].pageX;
+            currentRotation += (x - startX) * 0.5;
+            zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
+            startX = x;
+        });
 
-        // Khi rê chuột vào vùng Zoetrope thì ngừng xoay tự động
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener('touchend', () => { isDragging = false; });
+
         wrapper.addEventListener('mouseenter', () => autoRotate = false);
         wrapper.addEventListener('mouseleave', () => { if(!isDragging) autoRotate = true; });
     </script>

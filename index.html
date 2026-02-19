@@ -3,140 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morninger Universe | Interactive</title>
+    <title>Zoetrope IP Showcase</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
-
-        /* --- DAWN BACKGROUND --- */
-        .dawn-portal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
-            background-size: cover;
-            z-index: 1; cursor: pointer;
-            filter: brightness(0.4); transition: filter 1s;
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a; /* Màu nền tối giống ảnh mẫu */
+            overflow: hidden;
+            perspective: 1000px;
         }
 
-        /* --- WORLD ZOE SYSTEM --- */
-        .zoe-system {
-            position: relative; z-index: 3; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 1200px;
+        /* Container bao quanh vòng xoay */
+        .zoetrope-container {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate 15s linear infinite; /* Tốc độ xoay */
         }
 
-        #dust-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
-
-        .zoetrope-wrapper { width: 200px; height: 280px; transform-style: preserve-3d; cursor: grab; z-index: 4; }
-        .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; }
-
-        .face {
-            position: absolute; width: 200px; height: 280px;
-            background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255,255,255,0.1);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: #fff; border-radius: 15px;
-            clip-path: ellipse(95% 100% at 50% 50%); backface-visibility: visible;
-        }
-        .face span { font-size: 10px; letter-spacing: 2px; margin-top: 15px; }
-
-        /* --- BURROWEL DYNAMIC SYSTEM --- */
-        .burrowel-anchor {
-            position: relative; z-index: 5; margin-top: 60px;
-            display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; cursor: pointer;
+        /* Dừng xoay khi di chuột vào */
+        .zoetrope-container:hover {
+            animation-play-state: paused;
         }
 
-        /* Hình ảnh đại diện hiện lên TO HƠN */
-        .burrowel-preview {
-            position: absolute; 
-            bottom: 80px; /* Đẩy lên cao hơn một chút */
-            width: 180px;  /* Tăng từ 100px lên 180px */
-            height: 250px; /* Tăng từ 140px lên 250px */
-            background: url('https://googleusercontent.com/image_generation_content/3') center/cover;
-            border-radius: 12px; 
-            border: 2px solid rgba(255,255,255,0.4);
-            opacity: 0; 
-            transform: translateY(30px) scale(0.8); /* Thêm hiệu ứng phóng to nhẹ khi hiện */
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); /* Hiệu ứng mượt hơn */
+        /* Định dạng chung cho mỗi mặt (Card) */
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+            backface-visibility: visible;
+            transition: transform 0.3s ease;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-label {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-family: sans-serif;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* Tính toán vị trí 3D cho 3 mặt (Tam giác đều) */
+        /* Khoảng cách từ tâm (translateZ) được tính bằng: (Cạnh / 2) / tan(180/số mặt) */
+        /* Với 3 mặt, góc là 120 độ. translateZ ≈ 87px cho chiều rộng 300px */
+        
+        .card:nth-child(1) { transform: rotateY(0deg) translateZ(90px); }
+        .card:nth-child(2) { transform: rotateY(120deg) translateZ(90px); }
+        .card:nth-child(3) { transform: rotateY(240deg) translateZ(90px); }
+
+        /* Hiệu ứng xoay */
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Hiệu ứng hạt (tùy chọn để giống ảnh mẫu) */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
-            box-shadow: 0 0 40px rgba(255,255,255,0.15);
+            background-image: radial-gradient(circle, white 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
         }
-
-        .burrowel-anchor.active .burrowel-preview { 
-            opacity: 1; 
-            transform: translateY(0) scale(1); 
-        }
-
-        .burrowel-base {
-            width: 200px; height: 35px;
-            background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%);
-            transform: rotateX(75deg); border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.05); transition: 0.5s;
-        }
-        .burrowel-text {
-            color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 4px;
-            margin-top: -10px; transition: 0.3s;
-        }
-
-        .burrowel-anchor:hover .burrowel-text, .burrowel-anchor.active .burrowel-text { 
-            color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.8); 
-        }
-
-        footer { position: fixed; bottom: 30px; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 20px; }
-        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.2); font-size: 9px; }
     </style>
 </head>
 <body>
 
-    <div class="dawn-portal" onclick="if(!isDragging) window.location.href='dawn.html'"></div>
-    
-    <div class="zoe-system">
-        <canvas id="dust-core"></canvas>
+    <div class="particles"></div>
 
-        <div class="zoetrope-wrapper" id="wrapper">
-            <div class="zoetrope" id="zoetrope">
-                <a href="stcl-detail.html" class="face">
-                    <div style="width:100%; height:100%; background: url('https://googleusercontent.com/image_generation_content/1') center/cover; opacity: 0.6;"></div>
-                    <span>SIGN THE COLD LAND</span>
-                </a>
-                <a href="zoe-ip2.html" class="face">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
-                    <span>IP CORE II</span>
-                </a>
-                <a href="zoe-ip3.html" class="face">
-                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
-                    <span>IP CORE III</span>
-                </a>
-            </div>
-        </div>
+    <div class="zoetrope-container">
+        <a href="sign-the-cold-land.html" class="card">
+            <img src="https://via.placeholder.com/300x400?text=Sign+The+Cold+Land" alt="IP 1">
+            <div class="card-label">SIGN THE COLD LAND</div>
+        </a>
 
-        <div class="burrowel-anchor" id="burrowelBtn">
-            <div class="burrowel-preview"></div>
-            <div class="burrowel-base"></div>
-            <div class="burrowel-text">BURROWEL</div>
-        </div>
+        <a href="ip-core-ii.html" class="card">
+            <img src="https://via.placeholder.com/300x400?text=IP+Core+II" alt="IP 2">
+            <div class="card-label">IP: CORE II</div>
+        </a>
+
+        <a href="ip-core-iii.html" class="card">
+            <img src="https://via.placeholder.com/300x400?text=IP+Core+III" alt="IP 3">
+            <div class="card-label">IP: CORE III</div>
+        </a>
     </div>
 
-    <footer>
-        <button class="minor-ip">Project A</button>
-        <button class="minor-ip">Project B</button>
-        <button class="minor-ip">Project C</button>
-    </footer>
-
-    <script>
-        const zoetrope = document.getElementById('zoetrope');
-        const wrapper = document.getElementById('wrapper');
-        const faces = document.querySelectorAll('.face');
-        const burrowelBtn = document.getElementById('burrowelBtn');
-        
-        let currentRotation = 0;
-        let isDragging = false;
-        let startX = 0;
-        let autoRotate = true;
-        let burrowelStep = 0; 
-
-        // --- TÍNH VÒNG TRÒN HOÀN HẢO ---
-        const totalFaces = faces.length;
-        const radius = Math.round((200 / 2) / Math.tan(Math.PI / totalFaces)) + 20; 
-
-        faces.forEach((face, i) => {
-            const angle = i * (360 / totalFaces);
-            face.style.transform = `rotateY(${angle
+</body>
+</html>

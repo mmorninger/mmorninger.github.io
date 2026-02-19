@@ -2,104 +2,158 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morninger Universe | Cinematic</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
-
-        /* --- LAYER 1: DAWN BACKGROUND --- */
-        .dawn-portal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
-            background-size: cover;
-            z-index: 1; cursor: pointer;
-            filter: brightness(0.4); transition: 1s;
-        }
-
-        /* --- LAYER 2: ZOE SYSTEM --- */
-        .zoe-system {
-            position: relative; z-index: 3; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 1200px;
-        }
-
-        /* LÕI BỤI SÁNG TỎA LAN */
-        .core-light {
-            position: absolute; width: 2px; height: 2px;
-            background: #ffd700; border-radius: 50%;
-            box-shadow: 0 0 40px 20px rgba(255, 215, 0, 0.3), 
-                        0 0 80px 40px rgba(255, 215, 0, 0.1);
-            animation: pulseLight 3s infinite ease-in-out;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .zoetrope-wrapper {
-            width: 200px; height: 300px;
-            transform-style: preserve-3d;
-            cursor: grab;
-            z-index: 4;
-        }
-
-        .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; position: relative; }
-
-        /* MẶT CONG NGHỆ THUẬT */
-        .face {
-            position: absolute; width: 200px; height: 300px;
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 40px / 15px; /* Hiệu ứng cong elip */
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-decoration: none; color: #fff;
-            backface-visibility: hidden; user-select: none;
-            backdrop-filter: blur(8px);
+        body {
+            margin: 0;
+            background-color: #1a1a1a; /* Màu tối huyền bí */
             overflow: hidden;
-        }
-        .face:hover { border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.3); }
-        .face span { font-size: 10px; letter-spacing: 2px; margin-top: 15px; opacity: 0.6; pointer-events: none; }
-
-        /* Khoảng cách sát nhau 135px để thấy mặt bên cạnh */
-        .face:nth-child(1) { transform: rotateY(0deg) translateZ(135px); }
-        .face:nth-child(2) { transform: rotateY(120deg) translateZ(135px); }
-        .face:nth-child(3) { transform: rotateY(240deg) translateZ(135px); }
-
-        /* --- BURROWEL BASE --- */
-        .burrowel-anchor {
-            text-decoration: none; position: relative; z-index: 5;
-            display: flex; flex-direction: column; align-items: center;
-            margin-top: 50px; cursor: pointer;
-        }
-        .burrowel-base {
-            width: 160px; height: 25px;
-            background: radial-gradient(ellipse at center, #444 0%, transparent 80%);
-            transform: rotateX(80deg); border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.5s;
-        }
-        .burrowel-text { color: rgba(255,255,255,0.4); font-size: 9px; letter-spacing: 4px; margin-top: -5px; transition: 0.3s; }
-        .burrowel-anchor:hover .burrowel-base { background: rgba(255, 215, 0, 0.4); box-shadow: 0 0 30px #ffd700; }
-        .burrowel-anchor:hover .burrowel-text { color: #fff; text-shadow: 0 0 10px #fff; }
-
-        @keyframes pulseLight {
-            0%, 100% { transform: scale(1); opacity: 0.4; }
-            50% { transform: scale(2); opacity: 0.7; }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            perspective: 1000px;
         }
 
-        footer { position: fixed; bottom: 20px; width: 100%; z-index: 6; display: flex; justify-content: center; gap: 20px; }
-        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 8px; cursor: pointer; letter-spacing: 1px; }
+        /* Container xoay */
+        .zoetrope-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            transform-style: preserve-3d;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        /* Các thẻ film */
+        .card {
+            position: absolute;
+            width: 200px;
+            height: 300px;
+            background: rgba(40, 40, 40, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box;
+            backface-visibility: visible;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 70%;
+            background: #333;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            color: #eee;
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Hiệu ứng Burrowel: Sáng trắng xám mờ */
+        .burrowel-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(200,200,200,0.05) 50%, transparent 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Lõi bụi vàng (Canvas) */
+        #dust-canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
-    <div class="dawn-portal" onclick="if(!isDragging) window.location.href='dawn.html'"></div>
+<canvas id="dust-canvas"></canvas>
 
-    <div class="zoe-system">
-        <div class="core-light"></div>
+<div class="zoetrope-container" id="zoetrope">
+    </div>
 
-        <div class="zoetrope-wrapper" id="wrapper">
-            <div class="zoetrope" id="zoetrope">
-                <a href="stcl-detail.html" class="face">
-                    <div style="width:100%; height:100%; background: url('https://googleusercontent.com/image_generation_content/1') center; background-size: cover; opacity: 0.5;"></div>
-                    <span>SIGN THE COLD LAND</span>
-                </a>
-                <a href="zoe-ip2.html" class
+<script>
+    const totalCards = 12;
+    const radius = 400; // Độ rộng của vòng tròn
+    const container = document.getElementById('zoetrope');
+
+    // Tạo các thẻ card
+    for (let i = 0; i < totalCards; i++) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        // Công thức xoay: mỗi card cách nhau (360/tổng số card) độ
+        const angle = i * (360 / totalCards);
+        card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        
+        card.innerHTML = `
+            <div class="card-image"></div>
+            <div class="card-title">SIGN THE COLD LAND</div>
+            <div style="color: #888; font-size: 10px; margin-top:5px;">onlick (if tag) return frosel</div>
+        `;
+        container.appendChild(card);
+    }
+
+    // Hiệu ứng bụi vàng tỏa ra (Canvas)
+    const canvas = document.getElementById('dust-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 800;
+
+    const particles = [];
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = canvas.width / 2;
+            this.y = canvas.height / 2;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 2;
+            this.speedY = (Math.random() - 0.5) * 2;
+            this.life = Math.random() * 100 + 50;
+            this.opacity = Math.random() * 0.5;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.life--;
+            if (this.life <= 0) this.reset();
+        }
+        draw() {
+            ctx.fillStyle = `rgba(255, 215, 0, ${this.opacity})`; // Vàng nhẹ
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < 150; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+
+</body>
+</html>

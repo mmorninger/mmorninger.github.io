@@ -1,34 +1,205 @@
-.face {
-    position: absolute;
-    width: 200px;
-    height: 280px;
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morninger Universe | Interactive</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; font-family: 'Helvetica', sans-serif; touch-action: none; }
 
-    background: rgba(15, 15, 15, 0.9);
-    border: 1px solid rgba(255,255,255,0.08);
+        /* --- DAWN BACKGROUND --- */
+        .dawn-portal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://googleusercontent.com/image_generation_content/2') no-repeat center center;
+            background-size: cover;
+            z-index: 1; cursor: pointer;
+            filter: brightness(0.4); transition: filter 1s;
+        }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+        /* --- WORLD ZOE SYSTEM --- */
+        .zoe-system {
+            position: relative; z-index: 3; height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            perspective: 1200px;
+        }
 
-    text-decoration: none;
-    color: #fff;
+        #dust-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
 
-    backface-visibility: visible;
+        .zoetrope-wrapper { width: 200px; height: 280px; transform-style: preserve-3d; cursor: grab; z-index: 4; }
+        .zoetrope { width: 100%; height: 100%; transform-style: preserve-3d; }
 
-    /* BIẾN RECTANGLE THÀNH SLICE */
-    clip-path: polygon(
-        50% 0%,
-        80% 10%,
-        95% 35%,
-        95% 65%,
-        80% 90%,
-        50% 100%,
-        20% 90%,
-        5% 65%,
-        5% 35%,
-        20% 10%
-    );
+        .face {
+            position: absolute; width: 200px; height: 280px;
+            background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-decoration: none; color: #fff; border-radius: 15px;
+            clip-path: ellipse(95% 100% at 50% 50%); backface-visibility: visible;
+        }
+        .face span { font-size: 10px; letter-spacing: 2px; margin-top: 15px; }
 
-    transform-origin: center center;
-}
+        /* --- BURROWEL DYNAMIC SYSTEM --- */
+        .burrowel-anchor {
+            position: relative; z-index: 5; margin-top: 60px;
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; cursor: pointer;
+        }
+
+        /* Hình ảnh đại diện hiện lên khi active */
+        .burrowel-preview {
+            position: absolute; bottom: 60px; width: 100px; height: 140px;
+            background: url('https://googleusercontent.com/image_generation_content/3') center/cover;
+            border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);
+            opacity: 0; transform: translateY(20px); transition: 0.5s; pointer-events: none;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .burrowel-anchor.active .burrowel-preview { opacity: 1; transform: translateY(0); }
+
+        .burrowel-base {
+            width: 200px; height: 35px;
+            background: radial-gradient(ellipse at center, rgba(200,200,200,0.2) 0%, transparent 75%);
+            transform: rotateX(75deg); border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.5s;
+        }
+        .burrowel-text {
+            color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 4px;
+            margin-top: -10px; transition: 0.3s;
+        }
+
+        .burrowel-anchor:hover .burrowel-text, .burrowel-anchor.active .burrowel-text { 
+            color: #fff; text-shadow: 0 0 10px #fff; 
+        }
+
+        footer { position: fixed; bottom: 30px; width: 100%; z-index: 4; display: flex; justify-content: center; gap: 20px; }
+        .minor-ip { background: none; border: none; color: rgba(255,255,255,0.2); font-size: 9px; }
+    </style>
+</head>
+<body>
+
+    <div class="dawn-portal" onclick="if(!isDragging) window.location.href='dawn.html'"></div>
+    
+    <div class="zoe-system">
+        <canvas id="dust-core"></canvas>
+
+        <div class="zoetrope-wrapper" id="wrapper">
+            <div class="zoetrope" id="zoetrope">
+                <a href="stcl-detail.html" class="face">
+                    <div style="width:100%; height:100%; background: url('https://googleusercontent.com/image_generation_content/1') center/cover; opacity: 0.6;"></div>
+                    <span>SIGN THE COLD LAND</span>
+                </a>
+                <a href="zoe-ip2.html" class="face">
+                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
+                    <span>IP CORE II</span>
+                </a>
+                <a href="zoe-ip3.html" class="face">
+                    <div style="width:100%; height:100%; background: #1a1a1a;"></div>
+                    <span>IP CORE III</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="burrowel-anchor" id="burrowelBtn">
+            <div class="burrowel-preview"></div>
+            <div class="burrowel-base"></div>
+            <div class="burrowel-text">BURROWEL</div>
+        </div>
+    </div>
+
+    <footer>
+        <button class="minor-ip">Project A</button>
+        <button class="minor-ip">Project B</button>
+        <button class="minor-ip">Project C</button>
+    </footer>
+
+    <script>
+        const zoetrope = document.getElementById('zoetrope');
+        const wrapper = document.getElementById('wrapper');
+        const faces = document.querySelectorAll('.face');
+        const burrowelBtn = document.getElementById('burrowelBtn');
+        
+        let currentRotation = 0;
+        let isDragging = false;
+        let startX = 0;
+        let autoRotate = true;
+        let burrowelStep = 0; // 0: chưa chạm, 1: hiện ảnh, 2: đi tiếp
+
+        // --- TÍNH VÒNG TRÒN HOÀN HẢO & THẺ CONG ---
+        const totalFaces = faces.length;
+        const radius = Math.round((200 / 2) / Math.tan(Math.PI / totalFaces)) + 20; 
+
+        faces.forEach((face, i) => {
+            const angle = i * (360 / totalFaces);
+            face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        });
+
+        function rotate() {
+            if (autoRotate) {
+                currentRotation -= 0.4; 
+                zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
+            }
+            requestAnimationFrame(rotate);
+        }
+        rotate();
+
+        // --- XỬ LÝ CLICK 2 BƯỚC CHO BURROWEL ---
+        burrowelBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (burrowelStep === 0) {
+                burrowelBtn.classList.add('active');
+                burrowelStep = 1;
+            } else {
+                window.location.href = 'burrowel.html';
+            }
+        });
+
+        // Reset nếu click ra ngoài
+        document.addEventListener('click', (e) => {
+            if (!burrowelBtn.contains(e.target)) {
+                burrowelBtn.classList.remove('active');
+                burrowelStep = 0;
+            }
+        });
+
+        // --- CANVAS BỤI VÀNG LAN TỎA ---
+        const canvas = document.getElementById('dust-core');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 600; canvas.height = 600;
+        const particles = [];
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = canvas.width / 2; this.y = canvas.height / 2;
+                this.size = Math.random() * 1.5;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.life = Math.random() * 100 + 50;
+                this.opacity = Math.random() * 0.4;
+            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life--; if (this.life <= 0) this.reset(); }
+            draw() {
+                ctx.fillStyle = `rgba(255, 215, 100, ${this.opacity})`;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+        for (let i = 0; i < 100; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- DRAG LOGIC ---
+        wrapper.addEventListener('mousedown', (e) => { isDragging = true; autoRotate = false; startX = e.pageX; });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentRotation += (e.pageX - startX) * 0.5;
+            zoetrope.style.transform = `rotateY(${currentRotation}deg)`;
+            startX = e.pageX;
+        });
+        window.addEventListener('mouseup', () => { isDragging = false; autoRotate = true; });
+    </script>
+</body>
+</html>
